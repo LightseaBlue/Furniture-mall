@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="css/easyui.css">
+<link rel="stylesheet" type="text/css" href="css/icon.css">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+</head>
+<body>
+<div style="margin-left: 436px">
+
+   <h2 style="margin-left: 143px">添加管理员</h2>
+    <div style="margin:20px 0;"></div>
+    <div class="easyui-panel" title="添加" style="width:100%;max-width:400px;padding:30px 60px;">
+        <form id="ff" method="post" enctype="multipart/form-data">
+        
+            <div style="margin-bottom:20px">
+                <input class="easyui-textbox" name="aname" style="width:100%" data-options="label:'姓名:',required:true">
+            </div>
+            <div style="margin-bottom:20px">
+                <input class="easyui-passwordbox" name="pwd" style="width:100%" data-options="label:'密码:',required:true,validType:'email'">
+            </div>
+            <div style="margin-bottom:20px">
+                <input class="easyui-filebox" accept="image/*" name="img" style="width:100%" data-options="label:'照片:',required:true">
+            </div>
+            
+        </form>
+        <div style="text-align:center;padding:5px 0">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">Submit</a>
+        </div>
+    </div>
+    
+    </div>
+    <script>
+
+        function submitForm(){
+        	$('#ff').form('submit', {
+        	    url:"../admin.action?op=add",
+        	    onSubmit: function(param){
+        	    },
+        	    success:function(data){
+        	        if(data==1){
+        	        	$.messager.show({
+        	        		title:'温馨提示',
+        	        		msg:'添加成功',
+        	        		timeout:5000,
+        	        		showType:'slide'
+        	        	});
+        	        }else{
+        	        	$.messager.alert('错误警告','添加失败')
+        	        }
+        	    }
+        	});
+        }
+        function clearForm(){
+            $('#ff').form('clear');
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>【后台管理系统】</title>
+<link rel="stylesheet" href="css/login.css" />
+</head>
+
+<body>
+	<div class="content">
+		<div class="bidTitle">后台登录</div>
+		<div class="logCon">
+			<div class="line">
+				<span>用户名:</span> <input class="bt_input" type="text" id="name" />
+			</div>
+			<div class="line">
+				<span>密码:</span> <input class="bt_input" type="text" id="pwd" />
+			</div>
+			<button type="button" class="logingBut" id="btn">登录</button>
+		</div>
+	</div>
+	<div style="text-align: center;"></div>
+	<script type="text/javascript" src="js/jquery-1.10.1.js"></script>
+	<script type="text/javascript">
+		$('#btn').click(function() {
+			var name = $('#name').val();
+			var pwd = $('#pwd').val();
+			if (name != "" && pwd != "") {
+				$.post("../admin.action", {
+					op : "login",
+					name : name,
+					pwd : pwd
+				}, function(data) {
+					alert(data);
+					if (data == 1) {
+						window.location.href = "index.jsp";
+					}
+				});
+			}
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h2 style="margin-left: 615px">加盟申请</h2>
+    
+    <table id="show">
+        
+    </table>
+    <script type="text/javascript">
+    $('#show').datagrid({
+        url:'../join.action?op=select',
+        columns:[[
+        	{field:'j_comp',title:'公司名',width:100},
+            {field:'j_addr',title:'公司地址',width:100},
+            {field:'j_comper',title:'公司人数',width:100},
+            {field:'j_xs',title:'销售人数',width:100},
+            {field:'j_money',title:'本年流水',width:100},
+            {field:'j_old',title:'上一个代理产品',width:100},
+            {field:'j_now',title:'现代理产品',width:100},
+            {field:'j_name',title:'申请人',width:100},
+            {field:'j_job',title:'申请人职位',width:100},
+            {field:'j_phone',title:'公司邮箱',width:100},
+            {
+				field : 'aa',
+				title : '驳回',
+				width : 100,
+				formatter : function(value, row, index) {
+					return '<a href="javascript:void(0)"  onclick="delete1(&apos;'+ row['j_phone'] + '&apos;)">驳回</a>';
+				}
+			},
+			 {
+				field : 'bb',
+				title : '通过',
+				width : 100,
+				formatter : function(value, row, index) {
+					return '<a href="javascript:void(0)"  onclick="tg(&apos;'+ row['j_phone'] + '&apos;)">通过</a>';
+				}
+			} 
+        ]]
+    });
+    
+    function delete1(email) {
+		$.post("../join.action",{
+			op:"delete",
+			name:email
+		},function(data){
+			if(data==1){
+				$("#show").datagrid("reload");
+				$.messager.show({
+	        		title:'温馨提示',
+	        		msg:'通知成功',
+	        		timeout:5000,
+	        		showType:'slide'
+	        	});
+			}else{
+	        	$.messager.alert('错误警告','失败')
+	        }
+		})
+	}
+    
+    function tg(email) {
+		$.post("../join.action",{
+			op:"tg",
+			name:email
+		},function(data){
+			if(data==1){
+				$("#show").datagrid("reload");
+				$.messager.show({
+	        		title:'温馨提示',
+	        		msg:'通知成功',
+	        		timeout:5000,
+	        		showType:'slide'
+	        	});
+			}else{
+	        	$.messager.alert('错误警告','失败')
+	        }
+		})
+	}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </script>
+</body>
+</html>

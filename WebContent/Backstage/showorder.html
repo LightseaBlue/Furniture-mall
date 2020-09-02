@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2 style="margin-left: 615px">商品查看</h2>
+	<a href="javascript:void(0)" class="easyui-linkbutton back"
+		data-options="plain:true">返回</a>
+
+	<table id="show"></table>
+
+	<a href="addorder.html" class="easyui-linkbutton add"
+		data-options="plain:true">添加类型</a>
+		<a href="addorder1.html" class="easyui-linkbutton add"
+		data-options="plain:true">添加商品</a>
+	<script type="text/javascript">
+		$('#show')
+				.datagrid(
+						{
+							url : '../order.action?op=type',
+							columns : [ [
+									{
+										field : 't_name',
+										title : '类型名',
+										width : 100
+									},
+									{
+										field : 't_js',
+										title : '简介',
+										width : 100
+									},
+									{
+										field : 't_img',
+										title : '照片',
+										width : 100,
+										formatter : function(value, row, index) {
+											if (undefined == value) {
+												return '未上传照片';
+											} else {
+												return '<img src="../'+value+'" width="80px" height="80px"/>';
+											}
+										}
+									},
+									{
+										field : 'aa',
+										title : '详细',
+										width : 100,
+										formatter : function(value, row, index) {
+											return '<a href="javascript:void(0)" onclick="find(&apos;'+ row['t_name'] + '&apos;)">查看</a>';
+										}
+									},
+									{
+										field : 'bb',
+										title : '删除数据',
+										width : 100,
+										formatter : function(value, row, index) {
+											return '<a href="javascript:void(0)"  onclick="delete1(&apos;'+ row['t_name'] + '&apos;)">删除</a>';
+										}
+									} ] ]
+						});
+
+		$('.back').click(function () {
+			$('#show').empty();
+			$('#show')
+			.datagrid(
+					{
+						url : '../order.action?op=type',
+						columns : [ [
+								{
+									field : 't_name',
+									title : '类型名',
+									width : 100
+								},
+								{
+									field : 't_js',
+									title : '简介',
+									width : 100
+								},
+								{
+									field : 't_img',
+									title : '照片',
+									width : 100,
+									formatter : function(value, row, index) {
+										if (undefined == value) {
+											return '未上传照片';
+										} else {
+											return '<img src="../'+value+'" width="80px" height="80px"/>';
+										}
+									}
+								},
+								{
+									field : 'aa',
+									title : '详细',
+									width : 100,
+									formatter : function(value, row, index) {
+										return '<a href="javascript:void(0)" onclick="find(&apos;'+ row['t_name'] + '&apos;)">查看</a>';
+									}
+								},
+								{
+									field : 'bb',
+									title : '删除数据',
+									width : 100,
+									formatter : function(value, row, index) {
+										return '<a href="javascript:void(0)"  onclick="delete1(&apos;'+ row['t_name'] + '&apos;)">删除</a>';
+									}
+								} ] ]
+					});
+		})
+
+		//查看
+		function find(row) {
+			$('#show').empty();
+			$('#show').datagrid(
+					{
+						url : '../order.action?op=xtype&name='+row+'',
+						columns : [ [
+								{
+									field : 't_type',
+									title : '类型名',
+									width : 100
+								},
+								{
+									field : 'x_name',
+									title : '简介',
+									width : 100
+								},
+								{
+									field : 'x_sj',
+									title : '简介',
+									width : 100
+								},
+								{
+									field : 'x_cb',
+									title : '简介',
+									width : 100
+								},
+								{
+									field : 'x_num',
+									title : '简介',
+									width : 100
+								},
+								{
+									field : 'x_js',
+									title : '简介',
+									width : 100
+								},
+								{
+									field : 'x_size',
+									title : '简介',
+									width : 100
+								},
+								{
+									field : 'x_img',
+									title : '照片',
+									width : 100,
+									formatter : function(value, row, index) {
+										if (undefined == value) {
+											return '未上传照片';
+										} else {
+											return '<img src="../'+value+'" width="80px" height="80px"/>';
+										}
+									}
+								},
+								{
+									field : 'bb',
+									title : '删除数据',
+									width : 100,
+									formatter : function(value, row, index) {
+										return '<a href="javascript:void(0)"  onclick="delete2(&apos;'+ row['t_type']+"','"+row['x_name'] + '&apos;)">删除</a>';
+									}
+								} ] ]
+					});
+			
+		}
+		function delete2(name,pname) {
+			alert(name+""+pname);
+			$.post("../order.action",{
+				op:"deletex",
+				name:pname,
+				type:name
+			},function(data){
+				if(data==1){
+					$("#show").datagrid("reload");
+					$.messager.show({
+		        		title:'温馨提示',
+		        		msg:'成功',
+		        		timeout:5000,
+		        		showType:'slide'
+		        	});
+				}else{
+		        	$.messager.alert('错误警告','失败')
+		        }
+			})
+		}
+		//删除
+		function delete1(row) {
+			$.post("../order.action",{
+				op:"deletet",
+				name:row
+			},function(data){
+				if(data==1){
+					$("#show").datagrid("reload");
+					$.messager.show({
+		        		title:'温馨提示',
+		        		msg:'成功',
+		        		timeout:5000,
+		        		showType:'slide'
+		        	});
+				}else{
+		        	$.messager.alert('错误警告','失败')
+		        }
+			})
+		}
+		//添加
+		$('.add').click(function name() {
+			var href = $(this).attr('href');
+			var name = $(this).html();
+			var jq = top.jQuery;
+			if (jq("#show_center").tabs('exists', name)) {
+				jq("#show_center").tabs('select', name);
+			} else {
+				jq("#show_center").tabs('add', {
+					title : name,
+					href : href,
+					closable : true,
+					fit : true,
+					tools : [ {
+						iconCls : 'icon-mini-refresh',
+						handler : function() {
+							alert('refresh');
+						}
+					} ]
+				});
+			}
+			return false;
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h2 style="margin-left: 615px">订单查看</h2>
+    
+    <table id="show">
+        
+    </table>
+    <script type="text/javascript">
+    $('#show').datagrid({
+        url:'../order.action?op=seletetocar',
+        columns:[[
+        	{field:'x_name',title:'产品名',width:100},
+            {field:'u_name',title:'下单用户',width:100},
+            {field:'t_num',title:'下单数量',width:100},
+            {field:'t_addr',title:'地址',width:100},
+            {field:'t_time',title:'下单时间',width:250},
+            {
+				field : 'aa',
+				title : '发货',
+				width : 100,
+				formatter : function(value, row, index) {
+					return '<a href="javascript:void(0)"  onclick="delete1(&apos;'+ row['u_name'] +"','"+row['x_name']+"','"+row['t_time']+ '&apos;)">发货</a>';
+				}
+			} 
+        ]]
+    });
+    
+    function delete1(uname,pname,time) {
+		$.post("../order.action",{
+			op:"deletetocar",
+			pname:pname,
+			uname:uname,
+			time:time
+		},function(data){
+			if(data==1){
+				$("#show").datagrid("reload");
+				$.messager.show({
+	        		title:'温馨提示',
+	        		msg:'成功',
+	        		timeout:5000,
+	        		showType:'slide'
+	        	});
+			}else{
+	        	$.messager.alert('错误警告','失败')
+	        }
+		})
+	}
+    </script>
+</body>
+
+</html>

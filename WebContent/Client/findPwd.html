@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>找回密码</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="Keywords" content="网站关键词">
+    <meta name="Description" content="网站介绍">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/iconfont.css">
+    <link rel="stylesheet" href="./css/reg.css">
+</head>
+<body>
+<div id="ajax-hook"></div>
+<div class="wrap">
+    <div class="wpn">
+        <div class="form-data find_password">
+            <h4>找回密码</h4>
+            <p class="right_now">已有账号，<a href="login.html">马上登录</a></p>
+            
+            <p class="p-input pos">
+                <label for="pc_tel" id="email">邮箱</label>
+                <input type="text" id="pc_tel">
+                <span class="tel-warn pc_tel-err hide"><em>最多五个字</em><i class="icon-warn"></i></span>
+            </p>
+            <button class="lang-btn next1">下一步</button>
+            
+            <p class="p-input pos pc-very">
+                <label for="veri-code">输入验证码</label>
+                <input type="number" id="veri-code">
+                <a href="javascript:docode();" class="send">发送验证码</a>
+                <span class="time hide"><em>60</em>s</span>
+                <span class="tel-warn error hide"><em>验证码错误，请重新输入</em><i class="icon-warn"></i></span>
+            </p>
+             <button class="lang-btn next2 hide">下一步</button>
+             
+            <p class="p-input pos code pc-code">
+                <label for="veri">请输入新的密码</label>
+                <input type="text" id="newpwd">
+                <img src="">
+                <span class="tel-warn img-err hide"><em>最多五个字</em><i class="icon-warn"></i></span>
+            </p>
+            <button class="lang-btn next3 hide">修改</button>
+            <p class="right">Powered by © LightseaBlue</p>
+        </div>
+    </div>
+</div>
+<script src="./js/jquery.js"></script>
+<script src="./js/agree.js"></script>
+<script type="text/javascript" src="js/jquery-1.10.1.js"></script>
+<script type="text/javascript">
+//验证是否有这个人
+$('.next1').click(function () {
+	email=$('#pc_tel').val();
+	$.post("../user.action",{
+		op:'findpwd',
+		email:email
+	},function(data){
+		if(data!=2){
+			$('.pc-very').show();
+			$('.next1').hide();
+			$('.next2').removeClass('hide');
+			$('#pc_tel').attr("readonly","readonly");
+		}else{
+			alert("暂无该用户，请输入正确邮箱账号");
+		}
+	})
+	
+})
+//发送验证码
+function docode() {
+	var oTime = $(".time"),
+	oSend = $(".send"),
+	num1 = parseInt(oTime.text()),
+	oEm = $(".time em");
+    oSend.hide();
+    oTime.removeClass("hide");
+    var timer = setInterval(function () {
+   	var num2 = num1-=1;
+        oEm.text(num2);
+        if(num2==0){
+            clearInterval(timer);
+            oSend.text("重新发送验证码");
+		    oSend.show();
+            oEm.text("60");
+            oTime.addClass("hide");
+        }
+    },1000);
+    
+    $.post("../code.action", {
+		email : email
+	}, function(data) {
+		if (data == 2) {
+			alert('发送失败');
+		} else {
+			num = data;
+		}
+	});
+}
+//确认身份
+$('.next2').click(function () {
+	var code=$('#veri-code').val();
+	if(code==num){
+	$('.pc-very').hide();
+	$('.pc-code').show();
+	$('.next2').hide();
+	$('.next3').removeClass('hide');
+	}else{
+		alert("验证码错误，请重试");
+	}
+})
+//修改密码
+$('.next3').click(function () {
+	var newpwd=$('#newpwd').val();
+	if(newpwd!=""&&newpwd.length>=3){
+		$.post("../user.action",{
+			op:'findpwd',
+			email:email,
+			pwd:newpwd
+		},function(data){
+			if(data==1){
+				alert("修改成功");
+				window.location.href="login.html";
+			}else{
+				alert("修改失败");
+			}
+		})
+	}else{
+		alert("请输入正确的密码");
+	}
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<div style="text-align:center;">
+</div>
+</body>
+</html>

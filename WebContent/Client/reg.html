@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>用户注册</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="Keywords" content="网站关键词">
+<meta name="Description" content="网站介绍">
+<link rel="stylesheet" href="./css/base.css">
+<link rel="stylesheet" href="./css/iconfont.css">
+<link rel="stylesheet" href="./css/reg.css">
+</head>
+<body>
+	<div id="ajax-hook"></div>
+	<div class="wrap">
+	<!-- 
+		<video autoplay="autoplay" loop="loop"
+			style="width: 100%; height: 100%;">
+			<source src="img/login.mp4"></source>
+		</video>
+		 -->
+		<div class="wpn">
+			<div class="form-data pos">
+				<a href=""><img src="img/logo1.png" class="head-logo"></a>
+				<!--<p class="tel-warn hide"><i class="icon-warn"></i></p>-->
+				<form>
+					<p class="p-input pos">
+						<label for="tel">用户名</label> <input type="text" id="name">
+						<span class="tel-warn name-err hide"><em></em><i class=""></i></span>
+					</p>
+					<p class="p-input pos">
+						<label for="tel">密码</label> <input type="password" id="pwd">
+						<span class="tel-warn pwd-err hide"><em></em><i class=""></i></span>
+					</p>
+					<p class="p-input pos">
+						<label for="tel">手机号</label> <input type="number" id="tel"
+							autocomplete="off"> <span class="tel-warn tel-err hide"><em></em><i
+							class="icon-warn"></i></span>
+					</p>
+					<p class="p-input pos">
+						<label for="tel">邮箱</label> <input type="text" id="email">
+						<span class="tel-warn email-err hide"><em></em><i
+							class="icon-warn"></i></span>
+					</p>
+					<p class="p-input pos" id="sendcode">
+						<label for="veri-code">输入验证码</label> <input type="number"
+							id="code"> <a href="javascript:Code();" class="send">发送验证码</a>
+						<span class="time hide"><em>60</em>s</span>
+						<span class="error hide"><em></em><i
+							class="icon-warn" style="margin-left: 5px"></i></span>
+					</p>
+					<p class="p-input pos hide" id="pwd">
+						<label for="passport">输入密码</label> <input type="password"
+							style="display: none" /> <input type="password" id="pwdpassport">
+						<span class="tel-warn pwd-err hide"><em></em><i
+							class="icon-warn" style="margin-left: 5px"></i></span>
+					</p>
+					<p class="p-input pos hide" id="confirmpwd">
+						<label for="passport2">确认密码</label> <input type="password"
+							style="position: absolute; top: -998px" /> <input
+							type="password" id="passport2"> <span
+							class="tel-warn confirmpwd-err hide"><em></em><i
+							class="icon-warn" style="margin-left: 5px"></i></span>
+					</p>
+				</form>
+				<div class="reg_checkboxline pos">
+					<span class="z"><i class="icon-ok-sign boxcol"
+						nullmsg="请同意!"></i></span> <input type="hidden" name="agree" value="1">
+					<div class="Validform_checktip"></div>
+					<p>
+						我已阅读并接受 <a href="agreement.html" target="_brack">《协议说明》</a>
+					</p>
+				</div>
+				<button class="lang-btn">注册</button>
+				<div class="bottom-info">
+					已有账号，<a href="./login.html">马上登录</a>
+				</div>
+				<p class="right">Powered by © LightseaBlue</p>
+			</div>
+		</div>
+	</div>
+	<script src="./js/jquery.js"></script>
+	<script src="./js/agree.js"></script>
+	<script type="text/javascript" src="js/jquery-1.10.1.js"></script>
+	<script type="text/javascript">
+		//验证码
+		function Code() {
+			var email = $('#email').val();
+			var reg = /^[\d\w]+@[\d\w]+.com$/;
+			var x = email.match(reg);
+			if (x != null) {
+				var oTime = $(".time"),
+				oSend = $(".send"),
+				num1 = parseInt(oTime.text()),
+				oEm = $(".time em");
+			    oSend.hide();
+			    oTime.removeClass("hide");
+			    var timer = setInterval(function () {
+			   	var num2 = num1-=1;
+		            oEm.text(num2);
+		            if(num2==0){
+		                clearInterval(timer);
+		                oSend.text("重新发送验证码");
+					    oSend.show();
+		                oEm.text("60");
+		                oTime.addClass("hide");
+		            }
+		        },1000);
+			    
+				$.post("../code.action", {
+					email : email
+				}, function(data) {
+					if (data == 2) {
+						$('.error').removeClass('hide');
+					} else {
+						num = data;
+					}
+				});
+			} else {
+				$('.email-err').removeClass('hide').text('请输入正确的邮箱');
+			}
+		}
+		//登陆按钮   
+		$('.lang-btn').click(function() {
+			var code = $('#code').val();
+			if (code != num) {
+				alert('验证码错误');
+			} else {
+				$.post("../user.action", {
+					op : 'reg',
+					name : name,
+					pwd : pwd,
+					tel : tel,
+					email : email
+				}, function(data) {
+					if (data == 1) {
+						alert('成功');
+						window.location.href="login.html";
+					} else {
+						alert('失败');
+					}
+				});
+			}
+		});
+		//失去焦点，提示
+		$('#name').blur(function() {
+			name = $('#name').val();
+			if (name == "" || name.length < 3) {
+				$('.name-err').removeClass('hide').text('请输入三个字符及以上的用户名');
+			} else {
+				$('.name-err').addClass('hide')
+			}
+		});
+		$('#pwd').blur(function() {
+			pwd = $('#pwd').val();
+			if (pwd == "" || name.length < 3) {
+				$('.pwd-err').removeClass('hide').text('请输入三个字符以上的密码');
+			} else {
+				$('.pwd-err').addClass('hide')
+			}
+		});
+		$('#tel').blur(function() {
+			tel = $('#tel').val();
+			var telreg = /^1[3456789]\d{9}$/;
+			if (!telreg.test(tel)) {
+				$('.tel-err').removeClass('hide').text('请输入正确的手机号码');
+			} else {
+				$('.tel-err').addClass('hide')
+			}
+		});
+		$('#email').blur(function() {
+			email = $('#email').val();
+			var reg = /^[\d\w]+@[\d\w]+.com$/;
+			if (!reg.test(email)) {
+				$('.email-err').removeClass('hide').text('请输入正确的邮箱');
+			} else {
+				$('.email-err').addClass('hide')
+			}
+		});
+	</script>
+	<div style="text-align: center;"></div>
+</body>
+</html>
